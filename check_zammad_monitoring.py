@@ -13,9 +13,6 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument("-H", "--host", dest="host", help="The zammad monitoring url with http:// | https://, without '?token=XXX'", required=True)
 parser.add_argument("-t", "--token", dest="token", help="The token to use, found in Webfrontend", required=True)
-
-
-
 args = parser.parse_args()
 
 if args.host:
