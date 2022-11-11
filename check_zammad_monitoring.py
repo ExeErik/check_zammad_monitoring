@@ -8,15 +8,21 @@
 import sys
 import requests
 import json
-from argparse import ArgumentParser
+import argparse
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-parser = ArgumentParser()
+parser = argparse.ArgumentParser(description="check_zammad_monitoring")
 parser.add_argument("-H", "--host", dest="host", help="The zammad monitoring url with http:// | https://, without '?token=XXX'", required=True)
 parser.add_argument("-t", "--token", dest="token", help="The token to use, found in Webfrontend", required=True)
+parser.add_argument("-k", "--insecure", dest="insecure", help="Dont verify the ssl-certificate", default=False, action=argparse.BooleanOptionalAction)
 args = parser.parse_args()
 
 if args.host:
-    x = requests.get(args.host + "?token=" + args.token)
+    if args.insecure:
+        x = requests.get(args.host + "?token=" + args.token, verify=False)
+    else:
+        x = requests.get(args.host + "?token=" + args.token, verify=True)
     if x.status_code == 200:
         data = json.loads(x.text)
         healthy = data['healthy']
